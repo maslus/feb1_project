@@ -23,11 +23,9 @@ public class DictionaryDao {
          3) ИНН состоит из 10 цифр (юр.лицо)
          */
         Stream<TradeParticipant> stream = list.stream()
-                .filter(tradeParticipant -> {
-                    return (Residence.RUSSIA_RESIDENT.equals(tradeParticipant.getResidence())
-                            && tradeParticipant.getBlockDate() == null
-                            && tradeParticipant.getINN().length() == 10);
-                });
+                .filter(tradeParticipant -> (Residence.RUSSIA_RESIDENT.equals(tradeParticipant.getResidence())
+                        && tradeParticipant.getBlockDate() == null
+                        && tradeParticipant.getINN().length() == 10));
 
 /*
  В случае смены региона регистрации юр.лица его ИНН не меняется,
@@ -41,7 +39,7 @@ public class DictionaryDao {
                         if (tradeParticipant.getINN() == null) return false;
                         Integer codeFromInn = Integer.valueOf(tradeParticipant.getINN().substring(0, 2));
                         for (int regionCode : region.getCodes()) {
-                           return   codeFromInn.equals(regionCode);
+                            if (codeFromInn.equals(regionCode)) return true;
                         }
                         return false;
                     })
